@@ -5,16 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     android:background="@drawable/back"
     android:id="@+id/MainlayoutID"
     tools:context=".MainActivity">
 
 
     <ImageView
-        android:layout_width="110dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="22dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/weather"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.161"
@@ -26,11 +25,11 @@
         android:id="@+id/tempID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="20dp"
         android:text="Hi"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="65sp"
+        android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.896"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +43,7 @@
         android:layout_marginTop="100dp"
         android:text="Temperature"
         android:textColor="#FBE732"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.905"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +52,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:layout_marginBottom="420dp"
+        android:layout_marginBottom="400dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,14 +61,13 @@
 
 
         <ImageView
-            android:layout_width="70dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/wind2" />
 
 
         <RelativeLayout
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -108,11 +106,9 @@
                 android:text="Day/Night"
                 android:layout_marginRight="15dp"
                 android:textColor="@color/white"
-                android:textSize="28sp"
+                android:textSize="26sp"
                 android:textStyle="bold" />
         </RelativeLayout>
-
-
 
     </LinearLayout>
 
@@ -122,11 +118,11 @@
         android:layout_marginTop="12dp"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_marginBottom="352dp"
+        android:layout_marginBottom="325dp"
         android:text="Weather Description"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="17sp"
+        android:textSize="16sp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -143,7 +139,6 @@
         android:layout_marginBottom="4dp"
         android:background="@drawable/button_state_list_animator"
         android:text="Check Air-Quality"
-        android:textColor="@drawable/button_text_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.528"

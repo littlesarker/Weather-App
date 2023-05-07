@@ -44,7 +44,7 @@ public class AirQualityActivity extends AppCompatActivity {
         ImageView img = (ImageView) findViewById(R.id.maskedID);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String myUrl = "Put API here";
+        String myUrl = "https://air-quality-api.open-meteo.com/v1/air-quality?latitude="+latitude+"&longitude="+longitude+"&hourly=pm10,pm2_5";
         StringRequest myRequest = new StringRequest(Request.Method.GET, myUrl, response -> {
 
             try {
