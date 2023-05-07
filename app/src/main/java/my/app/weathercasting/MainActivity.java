@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getData() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String myUrl = "Put API Here ";
+        String myUrl = "https://api.open-meteo.com/v1/forecast?latitude="+latitude+"&longitude="+longitude+"&current_weather=true&,windspeed_10m";
         StringRequest myRequest = new StringRequest(Request.Method.GET, myUrl, response -> {
             try {
                 //Create a JSON object containing information from the API.
@@ -131,18 +131,18 @@ public class MainActivity extends AppCompatActivity {
 
                 winddirection.setText(Direction);
 
-                wallpaper(isday);
 
                 if (isday == "1") {
                     isDay.setText("Day");
+                    wallpaper(isday);
                 } else {
                     isDay.setText("Night");
+                    wallpaper(isday);
                 }
 
                 int num = Integer.parseInt(wC);
                 dataArray(num);
 
-                Toast.makeText(MainActivity.this, isday, Toast.LENGTH_LONG).show();
 
 
             } catch (JSONException e) {
@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
         }, volleyError -> Toast.makeText(MainActivity.this, volleyError.getMessage(), Toast.LENGTH_SHORT).show());
 
         requestQueue.add(myRequest);
-
 
     }
 
