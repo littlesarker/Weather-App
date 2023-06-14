@@ -56,7 +56,6 @@ public class AirQualityActivity extends AppCompatActivity {
                 String str = Double.toString(inde);
                 pm10.setText(str + " μg/m³");
 
-
                 JSONArray array2 = jsonObject.getJSONObject("hourly").getJSONArray("pm2_5");
                 Double dpm2 = (Double) array2.get(2);
                 String str2 = Double.toString(dpm2);

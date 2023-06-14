@@ -3,6 +3,7 @@ package my.app.weathercasting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -35,13 +36,11 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
 
-    private static final int REQUEST_LOCATION = 101;
     TextView tempre, isDay, windspeed, winddirection, weatherCode;
-    LocationManager locationManager;
-    String latitude = "23.7943781", longitude = "90.3533634";
+    String latitude = "", longitude = "";
     AlertDialog.Builder builder;
     Button airButton;
-
+    private GpsTracker gpsTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,60 +57,39 @@ public class MainActivity extends AppCompatActivity {
         airButton = findViewById(R.id.airbuttonID);
 
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-
         if (isNetworkAvailable()) {
             Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_LONG).show();
 
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                GPS();
+            gpsTracker = new GpsTracker(MainActivity.this);
+            if (gpsTracker.canGetLocation()) {
+                double dla = gpsTracker.getLatitude();
+                double dlo = gpsTracker.getLongitude();
+
+                latitude = String.valueOf(dla);
+                longitude = String.valueOf(dlo);
+                Toast.makeText(getApplicationContext(), latitude + " " + longitude, Toast.LENGTH_LONG).show();
             } else {
-                MLocation();
+                gpsTracker.showSettingsAlert();
             }
+
             getData();
 
         } else {
             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
-
             checkIn();
             airButton.setEnabled(false);
 
             //end of else
         }
 
-
-
         onclick();
 
-
     }
-
-    public void MLocation() {
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-        } else {
-            Location gpslocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (gpslocation != null) {
-                double lat = gpslocation.getLatitude();
-                double longi = gpslocation.getLongitude();
-                latitude = String.valueOf(lat);
-                longitude = String.valueOf(longi);
-
-            } else {
-                Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
-
-
-            }
-        }
-
-    }
-
 
     public void getData() {
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String myUrl = "https://api.open-meteo.com/v1/forecast?latitude="+latitude+"&longitude="+longitude+"&current_weather=true&,windspeed_10m";
+        String myUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&current_weather=true&,windspeed_10m";
         StringRequest myRequest = new StringRequest(Request.Method.GET, myUrl, response -> {
             try {
                 //Create a JSON object containing information from the API.
@@ -142,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
                 int num = Integer.parseInt(wC);
                 dataArray(num);
-
 
 
             } catch (JSONException e) {
@@ -208,45 +185,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void GPS() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("GPS Enable").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        final AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-
-
-    }
-
-
     public void dataArray(int n) {
-        ArrayList<String> descriptionWeather = new ArrayList<String>(Arrays.asList("Cloud development not observed or not observable", "Cloud generally dissolving or becoming less developed", "State of sky on the whole unchanged", "Clouds generally forming or developing", "Visibility reduced by smoke", "Haze", "Widespread dust in suspension in the air", "Dust or sand raised by wind at or near the station", "Well-developed dust or sand whirl(s)", "Dust-storm or sandstorm within sight or at the station", "Mist",
-                "Patches of shallow fog or ice fog at the station", "More or less continuous shallow fog or ice fog at the station", "Lightning visible, no thunder heard", "Precipitation within sight, not reaching the ground", "Precipitation within sight, reaching the ground > 5 km from the station", "Precipitation within sight near to, but not at the station", "Thunderstorm, but no precipitation", "Squalls at or within sight of the station", "Funnel clouds at or within sight of the station",
-                "Drizzle (not freezing) or snow grains, not falling as showers", "Rain (not freezing), not falling as showers", "Snow, not falling as showers", "Rain and snow or ice pellets, not falling as showers", "Freezing drizzle or freezing rain", "Shower(s) of rain", "Shower(s) of snow, or of rain and snow", "Shower(s) of hail, or of rain and hail", "Fog or ice fog", "Thunderstorm (with or without precipitation)", "Slight or moderate dust-storm or sandstorm has decreased",
-                "Slight or moderate dust-storm or sandstorm no appreciable change", "Slight or moderate dust-storm or sandstorm - has begun or has increased", "Severe dust-storm or sandstorm has decreased", "Severe dust-storm or sandstorm no appreciable change", "Severe dust-storm or sandstorm has begun or has increased", "Slight/moderate drifting snow generally low (below eye level)", "Heavy drifting snow generally low (below eye level)", "Slight/moderate blowing snow  generally high (above eye level)",
-                "Heavy blowing snow - generally high (above eye level)", "Fog or ice fog at distance but not at station", "Fog or ice fog in patches", "Fog/ice fog, sky visible, has become thinner", "Fog/ice fog, sky invisible, has become thinner", "Fog or ice fog, sky visible, no appreciable change", "Fog or ice fog, sky invisible, no appreciable change", "Fog or ice fog, sky visible, has begun or has become thicker", "Fog or ice fog, sky invisible, has begun or has become thicker",
-                "Fog, depositing rime, sky visible", "Fog, depositing rime, sky invisible", "Drizzle not freezing intermittent slight", "Drizzle not freezing continuous slight",
-                "Drizzle not freezing intermittent moderate", "Drizzle not freezing continuous moderate", "Drizzle not freezing intermittent heavy", "Drizzle not freezing continuous heavy", "Drizzle freezing slight", "Drizzle freezing moderate or heavy (dense)", "Rain and drizzle slight", "Rain and drizzle moderate or heavy", "Rain, not freezing, intermittent, slight", "Rain, not freezing, continuous, slight", "Rain, not freezing, intermittent, moderate", "Rain, not freezing, continuous, moderate",
-                "Rain, not freezing, intermittent, heavy", "Rain, not freezing, continuous, heavy", "Rain, freezing, slight", "Rain, freezing, moderate or heavy", "Rain or drizzle and snow, slight", "Rain or drizzle and snow, moderate or heavy", "Intermittent fall of snowflakes, slight", "Continuous fall of snowflakes, slight", "Intermittent fall of snowflakes, moderate", "Continuous fall of snowflakes, moderate", "Intermittent fall of snowflakes, heavy", "Continuous fall of snowflakes, heavy", "Diamond dust (with or without fog)",
-                "Snow grains (with or without fog)", "Isolated star-like snow crystals (with or without fog)", "Ice pellets", "Rain shower(s), slight", "Rain shower(s), moderate or heavy", "Rain shower(s), violent", "Shower(s) of rain and snow, slight", "Shower(s) of rain and snow, moderate or heavy", "Snow shower(s), slight", "Snow shower(s), moderate or heavy", "Shower(s) of snow pellets or small hail, slight", "Shower(s) of snow pellets or small hail, moderate or heavy", "Shower(s) of hail no thunder, slight",
-                "Shower(s) of hail no thunder, moderate or heavy", "Slight rain - Thunderstorm during the preceding hour", "Moderate or heavy rain - Thunderstorm during the preceding hour", "Slight snow, or rain and snow mixed or hail, Thunderstorm during the preceding hour", "Moderate or heavy snow, or rain and snow mixed or hail, Thunderstorm during the preceding hour", "Thunderstorm, slight or moderate, without hail, but with rain and/or snow", "Thunderstorm, slight or moderate, with hail",
-                "Thunderstorm, heavy, without hail, but with rain and/or snow", "Thunderstorm combined with dust/sandstorm", "Thunderstorm, heavy with hail", ""
-        )
-
-        );
-
+        ArrayList<String> descriptionWeather = new ArrayList<String>(Arrays.asList("Cloud development not observed or not observable", "Cloud generally dissolving or becoming less developed", "State of sky on the whole unchanged", "Clouds generally forming or developing", "Visibility reduced by smoke", "Haze", "Widespread dust in suspension in the air", "Dust or sand raised by wind at or near the station", "Well-developed dust or sand whirl(s)", "Dust-storm or sandstorm within sight or at the station", "Mist", "Patches of shallow fog or ice fog at the station", "More or less continuous shallow fog or ice fog at the station", "Lightning visible, no thunder heard", "Precipitation within sight, not reaching the ground", "Precipitation within sight, reaching the ground > 5 km from the station", "Precipitation within sight near to, but not at the station", "Thunderstorm, but no precipitation", "Squalls at or within sight of the station", "Funnel clouds at or within sight of the station", "Drizzle (not freezing) or snow grains, not falling as showers", "Rain (not freezing), not falling as showers", "Snow, not falling as showers", "Rain and snow or ice pellets, not falling as showers", "Freezing drizzle or freezing rain", "Shower(s) of rain", "Shower(s) of snow, or of rain and snow", "Shower(s) of hail, or of rain and hail", "Fog or ice fog", "Thunderstorm (with or without precipitation)", "Slight or moderate dust-storm or sandstorm has decreased", "Slight or moderate dust-storm or sandstorm no appreciable change", "Slight or moderate dust-storm or sandstorm - has begun or has increased", "Severe dust-storm or sandstorm has decreased", "Severe dust-storm or sandstorm no appreciable change", "Severe dust-storm or sandstorm has begun or has increased", "Slight/moderate drifting snow generally low (below eye level)", "Heavy drifting snow generally low (below eye level)", "Slight/moderate blowing snow  generally high (above eye level)", "Heavy blowing snow - generally high (above eye level)", "Fog or ice fog at distance but not at station", "Fog or ice fog in patches", "Fog/ice fog, sky visible, has become thinner", "Fog/ice fog, sky invisible, has become thinner", "Fog or ice fog, sky visible, no appreciable change", "Fog or ice fog, sky invisible, no appreciable change", "Fog or ice fog, sky visible, has begun or has become thicker", "Fog or ice fog, sky invisible, has begun or has become thicker", "Fog, depositing rime, sky visible", "Fog, depositing rime, sky invisible", "Drizzle not freezing intermittent slight", "Drizzle not freezing continuous slight", "Drizzle not freezing intermittent moderate", "Drizzle not freezing continuous moderate", "Drizzle not freezing intermittent heavy", "Drizzle not freezing continuous heavy", "Drizzle freezing slight", "Drizzle freezing moderate or heavy (dense)", "Rain and drizzle slight", "Rain and drizzle moderate or heavy", "Rain, not freezing, intermittent, slight", "Rain, not freezing, continuous, slight", "Rain, not freezing, intermittent, moderate", "Rain, not freezing, continuous, moderate", "Rain, not freezing, intermittent, heavy", "Rain, not freezing, continuous, heavy", "Rain, freezing, slight", "Rain, freezing, moderate or heavy", "Rain or drizzle and snow, slight", "Rain or drizzle and snow, moderate or heavy", "Intermittent fall of snowflakes, slight", "Continuous fall of snowflakes, slight", "Intermittent fall of snowflakes, moderate", "Continuous fall of snowflakes, moderate", "Intermittent fall of snowflakes, heavy", "Continuous fall of snowflakes, heavy", "Diamond dust (with or without fog)", "Snow grains (with or without fog)", "Isolated star-like snow crystals (with or without fog)", "Ice pellets", "Rain shower(s), slight", "Rain shower(s), moderate or heavy", "Rain shower(s), violent", "Shower(s) of rain and snow, slight", "Shower(s) of rain and snow, moderate or heavy", "Snow shower(s), slight", "Snow shower(s), moderate or heavy", "Shower(s) of snow pellets or small hail, slight", "Shower(s) of snow pellets or small hail, moderate or heavy", "Shower(s) of hail no thunder, slight", "Shower(s) of hail no thunder, moderate or heavy", "Slight rain - Thunderstorm during the preceding hour", "Moderate or heavy rain - Thunderstorm during the preceding hour", "Slight snow, or rain and snow mixed or hail, Thunderstorm during the preceding hour", "Moderate or heavy snow, or rain and snow mixed or hail, Thunderstorm during the preceding hour", "Thunderstorm, slight or moderate, without hail, but with rain and/or snow", "Thunderstorm, slight or moderate, with hail", "Thunderstorm, heavy, without hail, but with rain and/or snow", "Thunderstorm combined with dust/sandstorm", "Thunderstorm, heavy with hail", ""));
         String descriptWeather = descriptionWeather.get(n);
-
         weatherCode.setText(descriptWeather);
 
     }
