@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -36,8 +37,8 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
 
-    TextView tempre, isDay, windspeed, winddirection, weatherCode;
-    String latitude = "", longitude = "";
+    TextView tempre, isDayD, windspeed, winddirection, weatherCode;
+    String latitude = "", longitude = "",SD="";
     AlertDialog.Builder builder;
     Button airButton;
     private GpsTracker gpsTracker;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         tempre = findViewById(R.id.tempID);
         windspeed = findViewById(R.id.speedID);
         winddirection = findViewById(R.id.windDID);
-        isDay = findViewById(R.id.isDayID);
+        isDayD = findViewById(R.id.isDayID);
         weatherCode = findViewById(R.id.weatherCodeID);
         airButton = findViewById(R.id.airbuttonID);
 
@@ -67,12 +68,14 @@ public class MainActivity extends AppCompatActivity {
 
                 latitude = String.valueOf(dla);
                 longitude = String.valueOf(dlo);
-                Toast.makeText(getApplicationContext(), latitude + " " + longitude, Toast.LENGTH_LONG).show();
+
             } else {
                 gpsTracker.showSettingsAlert();
             }
 
             getData();
+
+
 
         } else {
             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
@@ -84,12 +87,13 @@ public class MainActivity extends AppCompatActivity {
 
         onclick();
 
+
     }
 
     public void getData() {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String myUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&current_weather=true&,windspeed_10m";
+        String myUrl = "https://api.open-meteo.com/v1/forecast?latitude="+latitude+"&longitude="+longitude + "&current_weather=true&,windspeed_10m";
         StringRequest myRequest = new StringRequest(Request.Method.GET, myUrl, response -> {
             try {
                 //Create a JSON object containing information from the API.
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 String ws = myJsonObject.getJSONObject("current_weather").getString("windspeed");
                 String wD = myJsonObject.getJSONObject("current_weather").getString("winddirection");
                 String wC = myJsonObject.getJSONObject("current_weather").getString("weathercode");
-                String isday = myJsonObject.getJSONObject("current_weather").getString("is_day");
+                 SD = myJsonObject.getJSONObject("current_weather").getString("is_day");
 
 
                 tempre.setText(temp + "\u2103");
@@ -109,17 +113,13 @@ public class MainActivity extends AppCompatActivity {
 
                 winddirection.setText(Direction);
 
-
-                if (isday == "1") {
-                    isDay.setText("Day");
-                    wallpaper(isday);
-                } else {
-                    isDay.setText("Night");
-                    wallpaper(isday);
-                }
-
                 int num = Integer.parseInt(wC);
+
                 dataArray(num);
+
+                Toast.makeText(getApplicationContext(),SD,Toast.LENGTH_LONG).show();
+
+                wallpaper(SD);
 
 
             } catch (JSONException e) {
@@ -134,11 +134,15 @@ public class MainActivity extends AppCompatActivity {
     public void wallpaper(String s) {
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.MainlayoutID);
 
-        if (s == "0") {
+        if (s.contains("0")) {
             layout.setBackgroundResource(R.drawable.back2);
+            isDayD.setText("Night");
         }
-        if (s == "1") {
+        else if (s.contains("1")) {
             layout.setBackgroundResource(R.drawable.back3);
+            isDayD.setText("Day");
+            weatherCode.setTextColor(Color.RED);
+
         }
 
     }

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back"
+    android:background="@drawable/back3"
     android:id="@+id/MainlayoutID"
     tools:context=".MainActivity">
 
@@ -97,6 +97,7 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
+
                 android:gravity="top"
                 android:layout_below="@id/speedID"
                 android:id="@+id/isDayID"
@@ -114,16 +115,17 @@
     </LinearLayout>
 
     <TextView
+
         android:textStyle="bold"
         android:id="@+id/weatherCodeID"
         android:layout_marginTop="12dp"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="80dp"
         android:layout_marginBottom="325dp"
         android:text="Weather Description"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
