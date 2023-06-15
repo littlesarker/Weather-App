@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MainlayoutID"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back3"
-    android:id="@+id/MainlayoutID"
+    android:background="@drawable/back"
     tools:context=".MainActivity">
 
 
@@ -37,13 +36,13 @@
 
 
     <TextView
-        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:text="Temperature"
         android:textColor="#FBE732"
         android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.905"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,86 +61,71 @@
 
         <ImageView
             android:layout_width="60dp"
-            android:layout_marginLeft="5dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
             android:src="@drawable/wind2" />
 
 
         <RelativeLayout
+            android:padding="8dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:textStyle="bold"
                 android:id="@+id/speedID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
                 android:text="WindSpeed"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
-
-
-            <TextView
-                android:layout_marginTop="3dp"
-                android:layout_below="@id/speedID"
-                android:textStyle="bold"
-                android:layout_gravity="bottom"
                 android:textSize="20sp"
-                android:textColor="@color/white"
-                android:text="Wind Direction"
-                android:id="@+id/windDID"
-                android:layout_marginRight="60dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textStyle="bold" />
+
 
             <TextView
-
-                android:gravity="top"
-                android:layout_below="@id/speedID"
-                android:id="@+id/isDayID"
+                android:id="@+id/windDID"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignRight="@id/speedID"
-                android:layout_alignParentEnd="true"
-                android:text="Day/Night"
-                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/speedID"
+                android:layout_marginRight="60dp"
+                android:text="Wind Direction"
                 android:textColor="@color/white"
-                android:textSize="26sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+
+
         </RelativeLayout>
 
     </LinearLayout>
 
     <TextView
-
-        android:textStyle="bold"
         android:id="@+id/weatherCodeID"
-        android:layout_marginTop="12dp"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="325dp"
+        android:background="@android:color/transparent"
         android:text="Weather Description"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="18sp"
-        android:background="@android:color/transparent"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    
     <Button
         android:id="@+id/airbuttonID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:layout_centerInParent="true"
         android:layout_margin="32dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/button_state_list_animator"
-        android:text="Check Air-Quality"
+        android:backgroundTint="#178EED"
+        android:backgroundTintMode="screen"
+        android:text="Air Quality"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.528"

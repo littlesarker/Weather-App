@@ -36,9 +36,8 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    TextView tempre, isDayD, windspeed, winddirection, weatherCode;
-    String latitude = "", longitude = "",SD="";
+    TextView tempre, windspeed, winddirection, weatherCode;
+    String latitude = "", longitude = "", SD = "";
     AlertDialog.Builder builder;
     Button airButton;
     private GpsTracker gpsTracker;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         tempre = findViewById(R.id.tempID);
         windspeed = findViewById(R.id.speedID);
         winddirection = findViewById(R.id.windDID);
-        isDayD = findViewById(R.id.isDayID);
+
         weatherCode = findViewById(R.id.weatherCodeID);
         airButton = findViewById(R.id.airbuttonID);
 
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
             getData();
 
 
-
         } else {
             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
             checkIn();
@@ -87,13 +85,12 @@ public class MainActivity extends AppCompatActivity {
 
         onclick();
 
-
     }
 
     public void getData() {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String myUrl = "https://api.open-meteo.com/v1/forecast?latitude="+latitude+"&longitude="+longitude + "&current_weather=true&,windspeed_10m";
+        String myUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude + "&current_weather=true&,windspeed_10m";
         StringRequest myRequest = new StringRequest(Request.Method.GET, myUrl, response -> {
             try {
                 //Create a JSON object containing information from the API.
@@ -102,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 String ws = myJsonObject.getJSONObject("current_weather").getString("windspeed");
                 String wD = myJsonObject.getJSONObject("current_weather").getString("winddirection");
                 String wC = myJsonObject.getJSONObject("current_weather").getString("weathercode");
-                 SD = myJsonObject.getJSONObject("current_weather").getString("is_day");
-
+                SD = myJsonObject.getJSONObject("current_weather").getString("is_day");
 
                 tempre.setText(temp + "\u2103");
                 windspeed.setText(ws + " Kmh");
@@ -117,10 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
                 dataArray(num);
 
-                Toast.makeText(getApplicationContext(),SD,Toast.LENGTH_LONG).show();
-
                 wallpaper(SD);
-
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -133,14 +126,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void wallpaper(String s) {
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.MainlayoutID);
-
         if (s.contains("0")) {
             layout.setBackgroundResource(R.drawable.back2);
-            isDayD.setText("Night");
-        }
-        else if (s.contains("1")) {
+        } else if (s.contains("1")) {
             layout.setBackgroundResource(R.drawable.back3);
-            isDayD.setText("Day");
             weatherCode.setTextColor(Color.RED);
 
         }
@@ -240,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
             // If user click no then dialog box is canceled.
             dialog.cancel();
         });
+
 
         // Create the Alert dialog
         AlertDialog alertDialog = builder.create();
